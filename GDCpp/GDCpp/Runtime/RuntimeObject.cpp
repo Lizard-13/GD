@@ -345,6 +345,11 @@ bool RuntimeObject::IsCollidingWith(RuntimeObject * obj2)
 {
     //First check if bounding circle are too far.
     RuntimeObject * obj1 = this;
+
+    // Useful for instance wrapper object extension only
+    if ( obj1->GetColliderPtr() == obj2->GetColliderPtr() )
+        return false;
+
     float o1w = obj1->GetWidth();
     float o1h = obj1->GetHeight();
     float o2w = obj2->GetWidth();

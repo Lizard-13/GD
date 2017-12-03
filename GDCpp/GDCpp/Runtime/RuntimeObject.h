@@ -109,12 +109,12 @@ public:
     /**
      * \brief Provide access to variables of the object.
      */
-    inline const RuntimeVariablesContainer & GetVariables() const { return objectVariables; }
+    virtual inline const RuntimeVariablesContainer & GetVariables() const { return objectVariables; }
 
     /**
      * \brief Provide access to variables of the object.
      */
-    inline RuntimeVariablesContainer & GetVariables() { return objectVariables; }
+    virtual inline RuntimeVariablesContainer & GetVariables() { return objectVariables; }
 
     ///@}
 
@@ -162,42 +162,42 @@ public:
     /**
      * \brief Query the Z order of the object
      */
-    inline int GetZOrder() const { return zOrder; }
+    virtual inline int GetZOrder() const { return zOrder; }
 
     /**
      * \brief Change the Z order of the object
      */
-    inline void SetZOrder(int zOrder_ ) { zOrder = zOrder_; }
+    virtual inline void SetZOrder(int zOrder_ ) { zOrder = zOrder_; }
 
     /**
      * \brief Return if the object is hidden or not
      */
-    inline bool IsHidden() const {return hidden;};
+    virtual inline bool IsHidden() const { return hidden; };
 
     /**
      * \brief Return if the object is visible ( not hidden )
      */
-    inline bool IsVisible() const {return !hidden;};
+    virtual inline bool IsVisible() const { return !hidden; };
 
     /**
      * \brief Hide/Show the object
      */
-    inline void SetHidden(bool hide = true) {hidden = hide;};
+    virtual inline void SetHidden(bool hide = true) { hidden = hide; };
 
     /**
      * \brief Change the layer of the object
      */
-    inline void SetLayer(const gd::String & layer_) { layer = layer_;}
+    virtual inline void SetLayer(const gd::String & layer_) { layer = layer_;}
 
     /**
      * \brief Get the layer of the object
      */
-    inline const gd::String & GetLayer() const { return layer; }
+    virtual inline const gd::String & GetLayer() const { return layer; }
 
     /**
      * \brief Check if the object is on a layer.
      */
-    inline bool IsOnLayer(const gd::String & layer_) const { return layer == layer_; }
+    virtual inline bool IsOnLayer(const gd::String & layer_) const { return layer == layer_; }
 
     /**
      * \brief Get the object AABB
@@ -294,30 +294,40 @@ public:
     /**
      * \brief Get the X coordinate of the object in the layout.
      */
-    inline float GetX() const { return X; }
+    virtual inline float GetX() const { return X; }
 
     /**
      * \brief Get the Y coordinate of the object in the layout.
      */
-    inline float GetY() const { return Y; }
+    virtual inline float GetY() const { return Y; }
 
     /**
      * \brief Change X position of the object.
      * \note This method cannot be redefined: Redefine OnPositionChanged() to do extra work if needed.
      */
-    void SetX(float x_) { X = x_; OnPositionChanged(); }
+    void SetX(float x_) { X = x_; OnPositionChanged(); OnSetX(x_); }
 
     /**
      * \brief Change Y position of the object.
      * \note This method cannot be redefined: Redefine OnPositionChanged() to do extra work if needed.
      */
-    void SetY(float y_) { Y = y_; OnPositionChanged(); }
+    void SetY(float y_) { Y = y_; OnPositionChanged(); OnSetY(y_); }
 
     /**
      * Object can use this function to do special work
      * when position is changed.
+     * Parameters are the value
      */
     virtual void OnPositionChanged() {};
+
+    /**
+     * Object can use this function to do special work
+     * when position is modified.
+     * Parameters are the new values being set
+     */
+    virtual void OnSetX(float x_) {};
+
+    virtual void OnSetY(float y_) {};
 
     /**
      * \brief Get the real X position where is renderer the object.
@@ -419,20 +429,22 @@ public:
     ///@{
     void DeleteFromScene(RuntimeScene & scene);
     void PutAroundAPosition( float positionX, float positionY, float distance, float angleInDegrees );
-    void AddForce( float x, float y, float clearing );
-    void AddForceUsingPolarCoordinates( float angle, float length, float clearing );
-    void AddForceTowardPosition( float positionX, float positionY, float length, float clearing );
-    void AddForceToMoveAround( float positionX, float positionY, float angularVelocity, float distance, float clearing );
+    virtual void AddForce( float x, float y, float clearing );
+    virtual void AddForceUsingPolarCoordinates( float angle, float length, float clearing );
+    virtual void AddForceTowardPosition( float positionX, float positionY, float length, float clearing );
+    virtual void AddForceToMoveAround( float positionX, float positionY, float angularVelocity, float distance, float clearing );
     void AddForceTowardObject( RuntimeObject * object, float length, float clearing );
     void AddForceToMoveAroundObject( RuntimeObject * object, float velocity, float length, float clearing );
     void PutAroundObject( RuntimeObject * object, float length, float angleInDegrees );
+
+    virtual inline RuntimeObject * GetColliderPtr() { return this; };
 
     void RotateTowardPosition(float Xposition, float Yposition, float speed, RuntimeScene & scene);
     void RotateTowardAngle(float angleInDegrees, float speed, RuntimeScene & scene);
     void Rotate(float speed, RuntimeScene & scene);
 
     static gd::Variable & ReturnVariable(gd::Variable & variable) { return variable; };
-    bool VariableExists(const gd::String & variable);
+    virtual bool VariableExists(const gd::String & variable);
     static double GetVariableValue(const gd::Variable & variable) { return variable.GetValue(); };
     static const gd::String& GetVariableString(const gd::Variable & variable) { return variable.GetString(); };
     static bool VariableChildExists(const gd::Variable & variable, const gd::String & childName);
@@ -443,8 +455,8 @@ public:
     void SetXY( const char* xOperator, float xValue, const char* yOperator, float yValue );
 
     void Duplicate( RuntimeScene & scene, std::map <gd::String, std::vector<RuntimeObject*> *> pickedObjectLists );
-    void ActivateBehavior( const gd::String & behaviorName, bool activate = true );
-    bool BehaviorActivated( const gd::String & behaviorName );
+    virtual void ActivateBehavior( const gd::String & behaviorName, bool activate = true );
+    virtual bool BehaviorActivated( const gd::String & behaviorName );
 
     bool IsStopped();
     bool TestAngleOfDisplacement( float angle, float tolerance );
