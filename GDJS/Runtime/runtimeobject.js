@@ -684,9 +684,10 @@ gdjs.RuntimeObject.prototype.clearForces = function() {
 /**
  * Return true if no forces are applied on the object.
  * @method hasNoForces
+ * @param globalUpdate{Boolean} the function is called from the scene update functions
  * @return {Boolean} true if no forces are applied on the object.
  */
-gdjs.RuntimeObject.prototype.hasNoForces = function() {
+gdjs.RuntimeObject.prototype.hasNoForces = function(globalUpdate=false) {
     return this._forces.length === 0;
 };
 
@@ -903,7 +904,7 @@ gdjs.RuntimeObject.prototype.separateFromObjects = function(objects) {
 
    //Check if their is a collision with each object
    for(var i = 0, len = objects.length;i<len;++i) {
-       if ( objects[i].id != this.id ) {
+       if ( objects[i].getUniqueId() != this.getUniqueId() ) {
            var otherHitBoxes = objects[i].getHitBoxes();
 
            for(var k = 0, lenk = hitBoxes.length;k<lenk;++k) {
@@ -941,7 +942,7 @@ gdjs.RuntimeObject.prototype.separateFromObjectsList = function(objectsLists) {
 
             //Check if their is a collision with each object
             for(var i = 0, len = objects.length;i<len;++i) {
-                if ( objects[i].id != this.id ) {
+                if ( objects[i].getUniqueId() != this.getUniqueId() ) {
                     var otherHitBoxes = objects[i].getHitBoxes();
 
                     for(var k = 0, lenk = hitBoxes.length;k<lenk;++k) {
@@ -1049,7 +1050,7 @@ gdjs.RuntimeObject.prototype.separateObjectsWithoutForces = function(objectsList
     }
 
     for(var i = 0, len = objects.length;i<len;++i) {
-        if ( objects[i].id != this.id ) {
+        if ( objects[i].getUniqueId() != this.getUniqueId() ) {
             if ( this.getDrawableX() < objects[i].getDrawableX() ){
                 this.setX( objects[i].getDrawableX() - this.getWidth() );
             }
@@ -1087,7 +1088,7 @@ gdjs.RuntimeObject.prototype.separateObjectsWithForces = function(objectsLists, 
     }
 
     for(var i = 0, len = objects.length;i<len;++i) {
-        if ( objects[i].id != this.id ) {
+        if ( objects[i].getUniqueId() != this.getUniqueId() ) {
             if ( this.getDrawableX()+this.getCenterX() < objects[i].getDrawableX()+objects[i].getCenterX() )
             {
                 var av = this.hasNoForces() ? 0 : this.getAverageForce().getX();

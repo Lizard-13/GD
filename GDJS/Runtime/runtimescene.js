@@ -366,7 +366,7 @@ gdjs.RuntimeScene.prototype._updateObjects = function() {
 	for( var i = 0, len = this._allInstancesList.length;i<len;++i) {
         var obj = this._allInstancesList[i];
 
-        if (!obj.hasNoForces()) {
+        if (!obj.hasNoForces(true)) {
             var averageForce = obj.getAverageForce();
             var elapsedTimeInSeconds = obj.getElapsedTime(this) / 1000;
 
@@ -414,7 +414,7 @@ gdjs.RuntimeScene.prototype.updateObjectsForces = function() {
 
         	for(var j = 0, listLen = list.length;j<listLen;++j) {
         		var obj = list[j];
-        		if (!obj.hasNoForces()) {
+        		if (!obj.hasNoForces(true)) {
         			var averageForce = obj.getAverageForce();
                     var elapsedTimeInSeconds = obj.getElapsedTime(this) / 1000;
 

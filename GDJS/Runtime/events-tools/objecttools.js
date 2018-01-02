@@ -92,7 +92,7 @@ gdjs.evtTools.object.twoListsTest = function(predicate, objectsLists1, objectsLi
                 for(var l = 0, lenl = arr2.length;l<lenl;++l) {
                     if (arr1[k].pick && arr2[l].pick) continue; //Avoid unnecessary costly call to predicate.
 
-                    if (arr1[k].id !== arr2[l].id && predicate(arr1[k], arr2[l], extraArg)) {
+                    if (arr1[k].getUniqueId() !== arr2[l].getUniqueId() && predicate(arr1[k], arr2[l], extraArg)) {
                         if ( !inverted ) {
                             isTrue = true;
 
